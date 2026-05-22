@@ -24,4 +24,14 @@ describe('i18n fallback', () => {
 		assert.equal(urls.includes('http://example.com/fr/'), true);
 		assert.equal(urls.includes('http://example.com/fr/about/'), true);
 	});
+
+	it('includes dynamic route pages', async () => {
+		assert.equal(urls.includes('http://example.com/blog/post-one/'), true);
+		assert.equal(urls.includes('http://example.com/blog/post-two/'), true);
+	});
+
+	it('includes fallback locale pages for dynamic routes', async () => {
+		assert.equal(urls.includes('http://example.com/fr/blog/post-one/'), true);
+		assert.equal(urls.includes('http://example.com/fr/blog/post-two/'), true);
+	});
 });

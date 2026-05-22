@@ -128,28 +128,31 @@ const createPlugin = (options?: SitemapOptions): AstroIntegration => {
 							return new URL(fullPath, finalSiteUrl).href;
 						});
 
+					const pushUrl = (urls: string[], generated: string): void => {
+						// `finalSiteUrl` may end with a trailing slash
+						// or not because of base paths.
+						let fullPath = finalSiteUrl.pathname;
+						if (fullPath.endsWith('/')) fullPath += generated.substring(1);
+						else fullPath += generated;
+
+						const newUrl = new URL(fullPath, finalSiteUrl).href;
+
+						if (config.trailingSlash === 'never') {
+							urls.push(newUrl);
+						} else if (config.build.format === 'directory' && !newUrl.endsWith('/')) {
+							urls.push(newUrl + '/');
+						} else {
+							urls.push(newUrl);
+						}
+					};
+
 					const addRouteUrl = (urls: string[], r: IntegrationResolvedRoute): void => {
 						/**
 						 * Dynamic URLs have entries with `undefined` pathnames
 						 */
 						if (r.pathname) {
 							if (shouldIgnoreStatus(r.pathname ?? r.pattern)) return;
-
-							// `finalSiteUrl` may end with a trailing slash
-							// or not because of base paths.
-							let fullPath = finalSiteUrl.pathname;
-							if (fullPath.endsWith('/')) fullPath += r.generate(r.pathname).substring(1);
-							else fullPath += r.generate(r.pathname);
-
-							const newUrl = new URL(fullPath, finalSiteUrl).href;
-
-							if (config.trailingSlash === 'never') {
-								urls.push(newUrl);
-							} else if (config.build.format === 'directory' && !newUrl.endsWith('/')) {
-								urls.push(newUrl + '/');
-							} else {
-								urls.push(newUrl);
-							}
+							pushUrl(urls, r.generate(r.pathname));
 						}
 					};
 
@@ -162,6 +165,29 @@ const createPlugin = (options?: SitemapOptions): AstroIntegration => {
 						// Include i18n fallback routes (e.g. /fr/ falling back to /en/)
 						for (const fallbackRoute of r.fallbackRoutes ?? []) {
 							addRouteUrl(urls, fallbackRoute);
+						}
+
+						// For dynamic routes, expand fallback routes using concrete page paths
+						if (!r.pathname && r.fallbackRoutes.length > 0) {
+							for (const page of pages) {
+								const pagePath = '/' + page.pathname;
+								const match = r.patternRegex.exec(pagePath);
+								if (match) {
+									// Map regex capture groups to route param names
+									const params: Record<string, string> = {};
+									for (let i = 0; i < r.params.length; i++) {
+										const value = match[i + 1];
+										if (value !== undefined) {
+											params[r.params[i].replace('...', '')] = value;
+										}
+									}
+									for (const fallbackRoute of r.fallbackRoutes) {
+										if (!fallbackRoute.pathname) {
+											pushUrl(urls, fallbackRoute.generate(params));
+										}
+									}
+								}
+							}
 						}
 
 						return urls;
