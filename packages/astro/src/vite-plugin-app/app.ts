@@ -240,7 +240,10 @@ export class AstroServerApp extends BaseApp<RunnablePipeline> {
 					method: incomingRequest.method,
 					body,
 					logger: self.logger,
-					isPrerendered: matchedRoute.routeData.prerender,
+					// Endpoints need full request context (query params, headers, body)
+					// even when prerendered, so exclude them from isPrerendered treatment.
+					isPrerendered:
+						matchedRoute.routeData.prerender && matchedRoute.routeData.type !== 'endpoint',
 					routePattern: matchedRoute.routeData.component,
 				});
 

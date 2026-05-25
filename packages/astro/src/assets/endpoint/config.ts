@@ -31,7 +31,10 @@ function getImageEndpointData(
 		type: 'endpoint',
 		origin: 'internal',
 		isIndex: false,
-		prerender: false,
+		// In dev mode, mark as prerendered so the prerender handler picks it up.
+		// This ensures the image endpoint works even when an adapter replaces the
+		// SSR environment with a non-runnable one (e.g. Cloudflare's workerd).
+		prerender: mode === 'dev',
 		params: [],
 	});
 }
