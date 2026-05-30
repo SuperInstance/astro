@@ -291,7 +291,14 @@ export abstract class BaseApp<P extends Pipeline = AppPipeline> {
 		if (!pathname) {
 			pathname = prependForwardSlash(this.removeBase(url.pathname));
 		}
-		const routeData = this.pipeline.matchRoute(decodeURI(pathname));
+		let decodedPathname: string;
+		try {
+			decodedPathname = decodeURI(pathname);
+		} catch {
+			// Malformed percent-encoding (e.g. %C0%AF) can't match any route → 404.
+			return undefined;
+		}
+		const routeData = this.pipeline.matchRoute(decodedPathname);
 		if (!routeData) return undefined;
 		if (allowPrerenderedRoutes) {
 			return routeData;
@@ -303,7 +310,7 @@ export abstract class BaseApp<P extends Pipeline = AppPipeline> {
 		// the same pattern should handle all other URLs.
 		if (routeData.prerender) {
 			if (routeData.params.length > 0) {
-				const allMatches = this.pipeline.matchAllRoutes(decodeURI(pathname));
+				const allMatches = this.pipeline.matchAllRoutes(decodedPathname);
 				return allMatches.find((r) => !r.prerender);
 			}
 			return undefined;
@@ -444,7 +451,11 @@ export abstract class BaseApp<P extends Pipeline = AppPipeline> {
 		if (!routeData) {
 			const domainPathname = this.computePathnameFromDomain(request);
 			if (domainPathname) {
-				routeData = this.pipeline.matchRoute(decodeURI(domainPathname));
+				try {
+					routeData = this.pipeline.matchRoute(decodeURI(domainPathname));
+				} catch {
+					// Malformed percent-encoding — leave routeData unset (no match).
+				}
 			}
 		}
 		const resolvedOptions: ResolvedRenderOptions = {
