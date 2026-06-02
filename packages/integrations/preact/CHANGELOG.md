@@ -1,5 +1,11 @@
 # @astrojs/preact
 
+## 6.0.0-alpha.1
+
+### Patch Changes
+
+- [#16900](https://github.com/withastro/astro/pull/16900) [`17a0fbd`](https://github.com/withastro/astro/commit/17a0fbd34d11db765e79caf269bfd5f43ef51da8) Thanks [@ocavue](https://github.com/ocavue)! - Bumps `devalue` dependency to v5.8.1
+
 ## 6.0.0-alpha.0
 
 ### Major Changes

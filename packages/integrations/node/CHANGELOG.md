@@ -1,5 +1,16 @@
 # @astrojs/node
 
+## 11.0.0-alpha.1
+
+### Patch Changes
+
+- [#16922](https://github.com/withastro/astro/pull/16922) [`7dce185`](https://github.com/withastro/astro/commit/7dce1852a4f185fb44f885030f48c1883e9b17ff) Thanks [@astrobot-houston](https://github.com/astrobot-houston)! - Fixes prerendered pages returning 404 when using `build.format: 'file'` or `build.format: 'preserve'` with the Node adapter in standalone mode.
+
+  Previously, clean URLs like `/about` would fail to resolve to `about.html` on disk, because the static file handler only supported the default `directory` format (`about/index.html`). Now the handler correctly resolves clean URLs to `.html` files when the build format produces them.
+
+- Updated dependencies [[`17a0fbd`](https://github.com/withastro/astro/commit/17a0fbd34d11db765e79caf269bfd5f43ef51da8), [`0d85e1b`](https://github.com/withastro/astro/commit/0d85e1b7ea58a243bd1b61bdfb951c4fd87b9db5), [`79c6c46`](https://github.com/withastro/astro/commit/79c6c469a735bece8a80200f7b188e15f1abff24), [`239c469`](https://github.com/withastro/astro/commit/239c469cd2cd66d147a302a2ca14e07a0891f9b8), [`493acdb`](https://github.com/withastro/astro/commit/493acdb4abc56534e9efa68af16e3ef273d7d88b), [`ef53ab9`](https://github.com/withastro/astro/commit/ef53ab91e8362b50bb1a3ab73d9350b93ea41de4), [`10229f7`](https://github.com/withastro/astro/commit/10229f73dbf0f19b9936e9a23f0abc774a4c579e)]:
+  - astro@7.0.0-alpha.2
+
 ## 11.0.0-alpha.0
 
 ### Patch Changes

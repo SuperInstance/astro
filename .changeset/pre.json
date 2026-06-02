@@ -30,13 +30,26 @@
     "@astrojs/markdown-remark": "7.0.1",
     "@astrojs/telemetry": "3.3.0",
     "@astrojs/underscore-redirects": "1.0.2",
-    "@astrojs/upgrade": "0.7.1"
+    "@astrojs/upgrade": "0.7.1",
+    "@astrojs/markdown-satteri": "0.2.1"
   },
   "changesets": [
     "common-pears-drive",
+    "dark-carpets-turn",
+    "fancy-roses-spend",
+    "few-apples-double",
+    "fix-advanced-routing-404-fallback",
+    "fix-astro-marks-all-features",
     "fix-dev-port-vite-restart",
+    "fix-i18n-redirect-header",
+    "fix-node-build-format-file",
+    "funky-deserts-invite",
     "goofy-tigers-like",
     "rusty-compilers-only",
-    "two-eels-live"
+    "silly-spoons-write",
+    "thick-trains-talk",
+    "two-eels-live",
+    "update-vite-plugin-svelte-v7",
+    "wacky-bugs-act"
   ]
 }
